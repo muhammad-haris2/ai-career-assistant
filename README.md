@@ -2,7 +2,7 @@
 
 A multi-agent AI system that analyzes your CV against any job description and delivers a match score, skill gap analysis, personalized learning roadmap, and tailored cover letter — in under 5 minutes.
 
-**[Try the live demo →](https://ai-career-assistant.streamlit.app)**
+**[Try the live demo →](https://ai-career-assistant-crewai.streamlit.app)**
 
 ---
 
