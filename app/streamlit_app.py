@@ -289,29 +289,28 @@ def render_results(results: dict):
         st.markdown(results.get("learning_path", "No data"), unsafe_allow_html=False)
 
     with tab3:
-    st.markdown('<div class="agent-badge">Agent 5 — Cover Letter Writer</div>',
-                unsafe_allow_html=True)
-    cover_letter = results.get("cover_letter", "")
+        st.markdown('<div class="agent-badge">Agent 5 — Cover Letter Writer</div>',
+                    unsafe_allow_html=True)
+        cover_letter = results.get("cover_letter", "")
 
-    # Copy button
-    col_a, col_b = st.columns([3, 1])
-    with col_b:
-        if st.button("📋 Copy to Clipboard", use_container_width=True):
-            st.write(
-                f"""<script>
-                navigator.clipboard.writeText(`{cover_letter.replace('`', "'")}`);
-                </script>""",
-                unsafe_allow_html=True,
-            )
-            st.success("Copied!")
+        col_a, col_b = st.columns([3, 1])
+        with col_b:
+            if st.button("📋 Copy to Clipboard", use_container_width=True):
+                st.write(
+                    f"""<script>
+                    navigator.clipboard.writeText(`{cover_letter.replace('`', "'")}`);
+                    </script>""",
+                    unsafe_allow_html=True,
+                )
+                st.success("Copied!")
 
-    st.text_area(
-        "Your tailored cover letter:",
-        value=cover_letter,
-        height=500,
-        key="cover_letter_box",
-    )
-    
+        st.text_area(
+            "Your tailored cover letter:",
+            value=cover_letter,
+            height=500,
+            key="cover_letter_box",
+        )
+
     with tab4:
         col_cv, col_jd = st.columns(2)
         with col_cv:
@@ -332,7 +331,6 @@ def render_results(results: dict):
                 height=400,
                 key="jd_analysis_box",
             )
-
 
 # ── Main app ──────────────────────────────────────────────
 def main():
