@@ -1,0 +1,35 @@
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Environment variables — NEVER push to GitHub
+.env
+.env.local
+
+# Uploaded CV files — user data, never push
+data/cv_*.pdf
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Test files — not needed on GitHub
+test_*.py
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Streamlit secrets
+.streamlit/secrets.toml
+
+
+
+data/*.pdf

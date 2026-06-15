@@ -1,0 +1,11 @@
+crewai
+crewai-tools
+langchain-groq
+langchain-community
+pymupdf
+python-dotenv
+fastapi
+uvicorn
+streamlit
+requests
+tavily-python
