@@ -1,4 +1,4 @@
-crewai
+crewai==1.14.7
 crewai-tools
 langchain-groq
 langchain-community
@@ -9,3 +9,5 @@ uvicorn
 streamlit
 requests
 tavily-python
+groq
+pydantic
