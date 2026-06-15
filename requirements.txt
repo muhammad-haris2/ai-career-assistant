@@ -1,4 +1,3 @@
-crewai==1.14.7
 crewai-tools
 langchain-groq
 langchain-community
