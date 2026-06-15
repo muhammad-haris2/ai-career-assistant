@@ -124,9 +124,14 @@ def check_api() -> bool:
     except Exception:
         return False
 
-
 def submit_job(cv_file, jd_text: str):
     """Submit CV and JD to API. Returns job_id string or None."""
+    # Validate file size — max 5MB
+    file_size_mb = len(cv_file.getvalue()) / (1024 * 1024)
+    if file_size_mb > 5:
+        st.error(f"CV file is too large ({file_size_mb:.1f}MB). Maximum size is 5MB.")
+        return None
+
     try:
         response = requests.post(
             f"{API_URL}/analyze",
@@ -142,8 +147,7 @@ def submit_job(cv_file, jd_text: str):
     except Exception as e:
         st.error(f"Could not reach API: {e}")
         return None
-
-
+    
 def get_status(job_id: str) -> dict:
     try:
         r = requests.get(f"{API_URL}/status/{job_id}", timeout=5)
@@ -193,7 +197,6 @@ def render_header():
     """, unsafe_allow_html=True)
 
 
-# ── Progress display ──────────────────────────────────────
 def render_progress(current_step: int, step_message: str, progress: int):
     steps = [
         "Agent 1: Parsing your CV",
@@ -206,19 +209,45 @@ def render_progress(current_step: int, step_message: str, progress: int):
     st.markdown(f"### ⚙️ Processing... {progress}%")
     st.progress(progress / 100)
     st.markdown(f"**Current:** {step_message}")
+
+    # ── Countdown timer ───────────────────────────────────
+    st.markdown(
+        """
+        <div style='
+            background: rgba(64,145,108,0.1);
+            border: 1px solid rgba(64,145,108,0.3);
+            border-radius: 8px;
+            padding: 10px 16px;
+            margin: 8px 0;
+            color: rgba(255,255,255,0.7);
+            font-size: 13px;
+        '>
+            ⏱️ AI agents are working... 
+            This takes 3-5 minutes total due to API rate limits.
+            Page refreshes automatically every few seconds.
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
     st.markdown("---")
 
     for i, step in enumerate(steps, 1):
         if i < current_step:
-            st.markdown(f'<div class="step-done">✅ {step}</div>',
-                        unsafe_allow_html=True)
+            st.markdown(
+                f'<div class="step-done">✅ {step}</div>',
+                unsafe_allow_html=True,
+            )
         elif i == current_step:
-            st.markdown(f'<div class="step-active">⚡ {step}</div>',
-                        unsafe_allow_html=True)
+            st.markdown(
+                f'<div class="step-active">⚡ {step} — running now...</div>',
+                unsafe_allow_html=True,
+            )
         else:
-            st.markdown(f'<div class="step-pending">⏳ {step}</div>',
-                        unsafe_allow_html=True)
-
+            st.markdown(
+                f'<div class="step-pending">⏳ {step}</div>',
+                unsafe_allow_html=True,
+            )
 
 # ── Results display ───────────────────────────────────────
 def render_results(results: dict):
@@ -260,16 +289,29 @@ def render_results(results: dict):
         st.markdown(results.get("learning_path", "No data"), unsafe_allow_html=False)
 
     with tab3:
-        st.markdown('<div class="agent-badge">Agent 5 — Cover Letter Writer</div>',
-                    unsafe_allow_html=True)
-        cover_letter = results.get("cover_letter", "")
-        st.text_area(
-            "Your tailored cover letter (copy from here):",
-            value=cover_letter,
-            height=500,
-            key="cover_letter_box",
-        )
+    st.markdown('<div class="agent-badge">Agent 5 — Cover Letter Writer</div>',
+                unsafe_allow_html=True)
+    cover_letter = results.get("cover_letter", "")
 
+    # Copy button
+    col_a, col_b = st.columns([3, 1])
+    with col_b:
+        if st.button("📋 Copy to Clipboard", use_container_width=True):
+            st.write(
+                f"""<script>
+                navigator.clipboard.writeText(`{cover_letter.replace('`', "'")}`);
+                </script>""",
+                unsafe_allow_html=True,
+            )
+            st.success("Copied!")
+
+    st.text_area(
+        "Your tailored cover letter:",
+        value=cover_letter,
+        height=500,
+        key="cover_letter_box",
+    )
+    
     with tab4:
         col_cv, col_jd = st.columns(2)
         with col_cv:

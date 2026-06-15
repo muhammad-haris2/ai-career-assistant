@@ -2,7 +2,7 @@
 cover_letter.py — Agent 5: Cover Letter Writer
 """
 from utils.groq_client import call_groq
-
+from datetime import date
 
 def write_cover_letter(cv_analysis: str, jd_analysis: str, gap_analysis: str) -> str:
     prompt = f"""You are an expert career coach and professional cover letter writer.
@@ -31,7 +31,7 @@ INSTRUCTIONS:
 
 FORMAT:
 [Name] | [Email] | [Phone] | [GitHub]
-[Today's date]
+{date.today().strftime("%B %d, %Y")}
 
 Dear Hiring Manager,
 
